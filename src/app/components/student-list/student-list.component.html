@@ -1,0 +1,259 @@
+<div class="container mt-3">
+  <h2>Student List</h2>
+  <form (ngSubmit)="onSearch()">
+    <div class="row">
+      <div class="form-group col">
+        <label for="name">Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="name"
+          placeholder="Name"
+          [(ngModel)]="studentSearch.name"
+          name="name"
+        />
+      </div>
+
+      <div class="form-group col">
+        <label for="address">Address</label>
+        <input
+          type="text"
+          class="form-control"
+          id="address"
+          placeholder="Address"
+          [(ngModel)]="studentSearch.address"
+          name="address"
+        />
+      </div>
+
+      <div class="form-group col">
+        <label for="gender">Gender</label>
+        <select
+          class="form-control"
+          id="gender"
+          [(ngModel)]="studentSearch.gender"
+          name="gender"
+        >
+          <option value=""></option>
+          <option value="nam">Nam</option>
+          <option value="nữ">Nữ</option>
+        </select>
+      </div>
+
+      <div class="form-group col">
+        <label for="startDate">StartDate</label>
+        <input
+          type="date"
+          class="form-control"
+          id="startDate"
+          [(ngModel)]="studentSearch.startDate"
+          name="startDate"
+        />
+      </div>
+
+      <div class="form-group col">
+        <label for="endDate">EndDate</label>
+        <input
+          type="date"
+          class="form-control"
+          id="endDate"
+          [(ngModel)]="studentSearch.endDate"
+          name="endDate"
+        />
+      </div>
+      <div class="col pt-4">
+        <button type="submit" class="btn btn-primary">Search</button>
+      </div>
+    </div>
+  </form>
+  <div class="row mt-3">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th (click)="onSort('name')" [style.cursor]="'pointer'">Name</th>
+          <th (click)="onSort('address')" [style.cursor]="'pointer'">
+            Address
+          </th>
+          <th (click)="onSort('gender')" [style.cursor]="'pointer'">Gender</th>
+          <th (click)="onSort('birthday')" [style.cursor]="'pointer'">
+            Brithday
+          </th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let student of page.items">
+          <td>{{ student.name }}</td>
+          <td>{{ student.address }}</td>
+          <td>{{ student.gender }}</td>
+          <td>{{ student.birthday | date : "dd/MM/yyyy" }}</td>
+          <td>
+            <button
+              (click)="updateClick(student)"
+              class="btn btn-info me-2"
+              data-bs-toggle="modal"
+              data-bs-target="#updateStudent"
+            >
+              <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+            <button
+              class="btn btn-danger"
+              data-bs-toggle="modal"
+              data-bs-target="#confrimDele"
+              (click)="studentDelete.id = student.id"
+            >
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <nav>
+      <ul class="pagination justify-content-center fixed-bottom">
+        <li class="page-item" [class.disabled]="page.pageNo === 0">
+          <a class="page-link" (click)="onPageChange(page.pageNo - 1)">Prev</a>
+        </li>
+        <li class="page-item" [ngClass]="{ 'd-none': page.pageNo === 0 }">
+          <a class="page-link" (click)="onPageChange(page.pageNo - 1)">{{
+            page.pageNo
+          }}</a>
+        </li>
+        <li class="page-item">
+          <a class="page-link active" (click)="onPageChange(page.pageNo)">{{
+            page.pageNo + 1
+          }}</a>
+        </li>
+        <li
+          class="page-item"
+          [ngClass]="{ 'd-none': page.pageNo === page.totalPages - 1 }"
+        >
+          <a class="page-link" (click)="onPageChange(page.pageNo + 1)">{{
+            page.pageNo + 2
+          }}</a>
+        </li>
+        <li
+          class="page-item"
+          [class.disabled]="page.pageNo === page.totalPages - 1"
+        >
+          <a class="page-link" (click)="onPageChange(page.pageNo + 1)">Next</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="confrimDele"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Delete</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">Are you sure you want to delete?</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          (click)="onDelete()"
+          data-bs-dismiss="modal"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="updateStudent"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Update</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="inputName">Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="inputName"
+            [(ngModel)]="studentUpdate.name"
+            name="name"
+          />
+        </div>
+        <div class="form-group">
+          <label for="inputAddress">Address</label>
+          <input
+            type="text"
+            class="form-control"
+            id="inputAddress"
+            [(ngModel)]="studentUpdate.address"
+            name="address"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="gender">Gender</label>
+          <select
+            class="form-control"
+            id="gender"
+            name="gender"
+            [(ngModel)]="studentUpdate.gender"
+          >
+            <option value="Nam">Nam</option>
+            <option value="Nữ">Nữ</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="birthday">Birthday</label>
+          <input
+            type="date"
+            class="form-control"
+            id="birthday"
+            name="birthday"
+            [(ngModel)]="studentUpdate.birthdayString"
+          />
+        </div>
+        <div class="row mt-3 d-flex justify-content-end ">
+          <button type="button" class="btn btn-secondary col-2 me-2" data-bs-dismiss="modal">
+            Close
+          </button>
+          <button
+            type="button"
+            class="btn btn-danger col-2 me-2"
+            data-bs-dismiss="modal"
+            (click)="onUpdate()"
+          >
+            Update
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
