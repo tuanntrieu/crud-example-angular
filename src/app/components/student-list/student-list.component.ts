@@ -3,7 +3,7 @@ import { PaginationResponse } from '../../models/pagination-response';
 import { Student } from '../../models/student';
 import { StudentSearch } from '../../models/student-search';
 import { StudentService } from '../../service/student.service';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
 import { StudentDelete } from '../../models/student-delete';
 import { StudentUpdate } from '../../models/student-update';
@@ -11,7 +11,7 @@ import { StudentUpdate } from '../../models/student-update';
 @Component({
   selector: 'app-student-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, DatePipe],
+  imports: [CommonModule, FormsModule, DatePipe, ReactiveFormsModule],
   templateUrl: './student-list.component.html',
   styleUrl: './student-list.component.scss',
 })
@@ -24,7 +24,18 @@ export class StudentListComponent {
 
   studentUpdate: StudentUpdate = new StudentUpdate();
 
-  constructor(private studentServie: StudentService, private datePipe: DatePipe) { }
+  updateForm!: FormGroup;
+
+  isFormSubmitted: boolean = false;
+
+  constructor(private studentServie: StudentService, private datePipe: DatePipe) {
+    this.updateForm = new FormGroup({
+      name: new FormControl("", [Validators.required]),
+      address: new FormControl("", [Validators.required]),
+      gender: new FormControl("", [Validators.required]),
+      birthday: new FormControl("", [Validators.required]),
+    });
+  }
 
   ngOnInit(): void {
     this.studentSearch.pageSize = 7;
@@ -71,11 +82,14 @@ export class StudentListComponent {
     console.log(this.studentUpdate);
   }
   onUpdate() {
-    this.studentServie.updateStudent(this.studentUpdate).subscribe(
-      () => {
-        this.searchStudent();
-      }
-    );
+    this.isFormSubmitted = true;
+    if (this.updateForm.valid) {
+      this.studentServie.updateStudent(this.studentUpdate).subscribe(
+        () => {
+          this.searchStudent();
+        }
+      );
+    }
   }
 
 

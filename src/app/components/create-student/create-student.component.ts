@@ -23,7 +23,7 @@ export class CreateStudentComponent {
       name: new FormControl("",[Validators.required]),
       address:new FormControl("",[Validators.required]),
       gender:new FormControl("",[Validators.required]),
-      birthday:new FormControl("",[Validators.required]),
+      birthday:new FormControl("",[Validators.required])
     });
   }
 
