@@ -1,17 +1,21 @@
 import { Component } from '@angular/core';
-import { PaginationResponse } from '../../models/pagination-response';
+import { PaginationResponse } from '../../models/response/pagination-response';
 import { Student } from '../../models/student';
-import { StudentSearch } from '../../models/student-search';
+
 import { StudentService } from '../../service/student.service';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
-import { StudentDelete } from '../../models/student-delete';
-import { StudentUpdate } from '../../models/student-update';
+
+import { HeaderComponent } from '../header/header.component';
+import { StudentDelete } from '../../models/request/student-delete';
+import { StudentSearch } from '../../models/request/student-search';
+import { StudentUpdate } from '../../models/request/student-update';
+
 
 @Component({
   selector: 'app-student-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, DatePipe, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, DatePipe, ReactiveFormsModule,HeaderComponent],
   templateUrl: './student-list.component.html',
   styleUrl: './student-list.component.scss',
 })
@@ -46,11 +50,13 @@ export class StudentListComponent {
   searchStudent() {
     this.studentServie.searchStudents(this.studentSearch).subscribe(
       response => {
-        this.page.items = response.items;
-        this.page.totalElements = response.totalElements;
-        this.page.pageNo = response.pageNo;
-        this.page.pageSize = response.pageSize;
-        this.page.totalPages = response.totalPages;
+        console.log(response);
+        
+        this.page.items = response.data.items;
+        this.page.totalElements = response.data.totalElements;
+        this.page.pageNo = response.data.pageNo;
+        this.page.pageSize = response.data.pageSize;
+        this.page.totalPages = response.data.totalPages;
       }
     );
   }

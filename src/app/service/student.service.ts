@@ -1,12 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { PaginationResponse } from '../models/pagination-response';
+import { PaginationResponse } from '../models/response/pagination-response';
 import { Student } from '../models/student';
-import { StudentSearch } from '../models/student-search';
-import { StudentCreate } from '../models/student-create';
-import { StudentDelete } from '../models/student-delete';
-import { StudentUpdate } from '../models/student-update';
+
+import { CommonResponse } from '../models/response/common-response';
+import { StudentCreate } from '../models/request/student-create';
+import { StudentDelete } from '../models/request/student-delete';
+import { StudentSearch } from '../models/request/student-search';
+import { StudentUpdate } from '../models/request/student-update';
+
 
 @Injectable({
   providedIn: 'root'
@@ -17,20 +20,20 @@ export class StudentService {
 
   constructor(private httpClient: HttpClient) { }
 
-  searchStudents(studentSearch: StudentSearch): Observable<PaginationResponse<Student>> {
-    return this.httpClient.post<PaginationResponse<Student>>(`${this.baseURL + "/search"}`, studentSearch);
+  searchStudents(studentSearch: StudentSearch): Observable<CommonResponse<PaginationResponse<Student>>> {
+    return this.httpClient.post<CommonResponse<PaginationResponse<Student>>>(`${this.baseURL + "/search"}`, studentSearch);
   }
 
-  createStudent(studentCreate: StudentCreate): Observable<Student> {
-    return this.httpClient.post<Student>(`${this.baseURL + "/create-student"}`, studentCreate);
+  createStudent(studentCreate: StudentCreate): Observable<CommonResponse<string>> {
+    return this.httpClient.post<CommonResponse<string>>(`${this.baseURL + "/create-student"}`,studentCreate);
   }
 
-  updateStudent(studentUpdate: StudentUpdate): Observable<Student> {
-    return this.httpClient.post<Student>(`${this.baseURL + "/update-student"}`, studentUpdate);
+  updateStudent(studentUpdate: StudentUpdate): Observable<CommonResponse<string>> {
+    return this.httpClient.post<CommonResponse<string>>(`${this.baseURL + "/update-student"}`, studentUpdate);
   }
 
-  deleteStudent(studentDelete: StudentDelete): Observable<string> {
-    return this.httpClient.post(`${this.baseURL + "/delete-student"}`, studentDelete, { responseType: 'text' });
+  deleteStudent(studentDelete: StudentDelete): Observable<CommonResponse<string>> {
+    return this.httpClient.post<CommonResponse<string>>(`${this.baseURL + "/delete-student"}`, studentDelete);
   }
 
 }

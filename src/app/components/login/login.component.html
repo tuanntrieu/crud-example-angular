@@ -1,0 +1,59 @@
+<div class="container">
+  <div class="login-container">
+    <h3 class="text-center">Login</h3>
+    <form (ngSubmit)="onSubmit()" [formGroup]="form">
+      <div class="form-group mt-2">
+        <label for="username">Username</label>
+        <input
+          type="text"
+          class="form-control mt-2"
+          id="username"
+          placeholder="Enter username"
+          formControlName="username"
+          [(ngModel)]="loginRequest.username"
+        />
+      </div>
+      <div
+        class="text-danger"
+        *ngIf="
+          form.controls['username'].invalid &&
+          (isFormSubmitted ||
+            form.controls['username'].touched ||
+            form.controls['username'].dirty)
+        "
+      >
+        <span *ngIf="form.controls['username'].errors?.['required']"
+          >Username is required</span
+        >
+      </div>
+      <div class="form-group mt-2">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          class="form-control mt-2"
+          id="password"
+          placeholder="Enter password"
+          formControlName="password"
+          [(ngModel)]="loginRequest.password"
+        />
+      </div>
+      <div
+        class="text-danger"
+        *ngIf="
+          form.controls['password'].invalid &&
+          (isFormSubmitted ||
+            form.controls['password'].touched ||
+            form.controls['password'].dirty)
+        "
+      >
+        <span *ngIf="form.controls['password'].errors?.['required']"
+          >Password is required</span
+        >
+      </div>
+      <div class="text-danger" *ngIf="errorMessage">{{ errorMessage }}</div> 
+      <div class="form-group mt-2 text-center">
+        <button type="submit" class="btn btn-primary btn-block">Login</button>
+      </div>
+    </form>
+  </div>
+</div>

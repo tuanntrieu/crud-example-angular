@@ -6,7 +6,7 @@ import { StudentListComponent } from "./components/student-list/student-list.com
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, StudentListComponent,DatePipe],
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive,DatePipe],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })

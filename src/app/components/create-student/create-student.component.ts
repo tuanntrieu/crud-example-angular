@@ -1,15 +1,18 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { StudentService } from '../../service/student.service';
-import { StudentCreate } from '../../models/student-create';
+
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { HeaderComponent } from "../header/header.component";
+import { StudentCreate } from '../../models/request/student-create';
+
 
 
 @Component({
   selector: 'app-create-student',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, HeaderComponent],
   templateUrl: './create-student.component.html',
   styleUrl: './create-student.component.scss'
 })
@@ -37,7 +40,7 @@ export class CreateStudentComponent {
   }
 
   goToHome() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/home']);
   }
 
   onSubmit() {
