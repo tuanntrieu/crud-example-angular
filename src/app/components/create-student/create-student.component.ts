@@ -6,6 +6,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HeaderComponent } from "../header/header.component";
 import { StudentCreate } from '../../models/request/student-create';
+import { ToastrService } from 'ngx-toastr';
 
 
 
@@ -21,7 +22,7 @@ export class CreateStudentComponent {
   form!: FormGroup;
   isFormSubmitted: boolean = false;
 
-  constructor(private studentServie: StudentService, private router: Router, private fb: FormBuilder) {
+  constructor(private studentServie: StudentService, private router: Router, private toastr: ToastrService) {
     this.form = new FormGroup({
       name: new FormControl("",[Validators.required]),
       address:new FormControl("",[Validators.required]),
@@ -33,13 +34,14 @@ export class CreateStudentComponent {
   studentCreate: StudentCreate = new StudentCreate();
 
   createStudent() {
-    this.studentServie.createStudent(this.studentCreate).subscribe(() => {
-      this.goToHome();
+    this.studentServie.createStudent(this.studentCreate).subscribe((response) => {
+      this.goToHome(response.data);
     }
     )
   }
 
-  goToHome() {
+  goToHome(message:string) {
+    this.toastr.success(message,"Susscess")
     this.router.navigate(['/home']);
   }
 

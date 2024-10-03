@@ -11,6 +11,7 @@ import { StudentDelete } from '../../models/request/student-delete';
 import { StudentSearch } from '../../models/request/student-search';
 import { StudentUpdate } from '../../models/request/student-update';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -34,7 +35,7 @@ export class StudentListComponent {
 
   isFormSubmitted: boolean = false;
 
-  constructor(private studentServie: StudentService, private datePipe: DatePipe) {
+  constructor(private studentServie: StudentService, private datePipe: DatePipe,private toastr: ToastrService) {
     this.updateForm = new FormGroup({
       name: new FormControl("", [Validators.required]),
       address: new FormControl("", [Validators.required]),
@@ -52,8 +53,6 @@ export class StudentListComponent {
   searchStudent() {
     this.studentServie.searchStudents(this.studentSearch).subscribe(
       response => {
-        console.log(response);
-
         this.page.items = response.data.items;
         this.page.totalElements = response.data.totalElements;
         this.page.pageNo = response.data.pageNo;
@@ -76,7 +75,8 @@ export class StudentListComponent {
   }
   onDelete() {
     this.studentServie.deleteStudent(this.studentDelete).subscribe(
-      () => {
+      (response) => {      
+        this.toastr.warning(response.data,"Success")
         this.searchStudent();
       }
     );
@@ -93,7 +93,9 @@ export class StudentListComponent {
     this.isFormSubmitted = true;
     if (this.updateForm.valid) {
       this.studentServie.updateStudent(this.studentUpdate).subscribe(
-        () => {
+        (response) => {
+        
+          this.toastr.success(response.data,"Success")
           this.searchStudent();
         }
       );
