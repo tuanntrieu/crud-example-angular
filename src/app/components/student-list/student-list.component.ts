@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PaginationResponse } from '../../models/response/pagination-response';
 import { Student } from '../../models/student';
 
@@ -10,16 +10,18 @@ import { HeaderComponent } from '../header/header.component';
 import { StudentDelete } from '../../models/request/student-delete';
 import { StudentSearch } from '../../models/request/student-search';
 import { StudentUpdate } from '../../models/request/student-update';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 
 @Component({
   selector: 'app-student-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, DatePipe, ReactiveFormsModule,HeaderComponent],
+  imports: [CommonModule, FormsModule, DatePipe, ReactiveFormsModule, HeaderComponent, NgxPaginationModule],
   templateUrl: './student-list.component.html',
   styleUrl: './student-list.component.scss',
 })
 export class StudentListComponent {
+
   page: PaginationResponse<Student> = new PaginationResponse<Student>();
 
   studentSearch: StudentSearch = new StudentSearch();
@@ -51,7 +53,7 @@ export class StudentListComponent {
     this.studentServie.searchStudents(this.studentSearch).subscribe(
       response => {
         console.log(response);
-        
+
         this.page.items = response.data.items;
         this.page.totalElements = response.data.totalElements;
         this.page.pageNo = response.data.pageNo;
@@ -68,8 +70,8 @@ export class StudentListComponent {
     this.searchStudent();
   }
 
-  onPageChange(pageNo: number) {
-    this.studentSearch.pageNo = pageNo;
+  onPageChange(event: number) {
+    this.studentSearch.pageNo = event-1;
     this.searchStudent();
   }
   onDelete() {
@@ -97,6 +99,7 @@ export class StudentListComponent {
       );
     }
   }
+
 
 
 }

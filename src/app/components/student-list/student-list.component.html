@@ -83,7 +83,17 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let student of page.items">
+        <tr
+          *ngFor="
+            let student of page.items
+              | paginate
+                : {
+                    itemsPerPage: page.pageSize,
+                    currentPage: page.pageNo + 1,
+                    totalItems: page.totalElements
+                  }
+          "
+        >
           <td>{{ student.name }}</td>
           <td>{{ student.address }}</td>
           <td>{{ student.gender }}</td>
@@ -109,37 +119,12 @@
         </tr>
       </tbody>
     </table>
-    <nav>
-      <ul class="pagination justify-content-center fixed-bottom">
-        <li class="page-item" [class.disabled]="page.pageNo === 0">
-          <a class="page-link" (click)="onPageChange(page.pageNo - 1)">Prev</a>
-        </li>
-        <li class="page-item" [ngClass]="{ 'd-none': page.pageNo === 0 }">
-          <a class="page-link" (click)="onPageChange(page.pageNo - 1)">{{
-            page.pageNo
-          }}</a>
-        </li>
-        <li class="page-item">
-          <a class="page-link active" (click)="onPageChange(page.pageNo)">{{
-            page.pageNo + 1
-          }}</a>
-        </li>
-        <li
-          class="page-item"
-          [ngClass]="{ 'd-none': page.pageNo === page.totalPages - 1 }"
-        >
-          <a class="page-link" (click)="onPageChange(page.pageNo + 1)">{{
-            page.pageNo + 2
-          }}</a>
-        </li>
-        <li
-          class="page-item"
-          [class.disabled]="page.pageNo === page.totalPages - 1"
-        >
-          <a class="page-link" (click)="onPageChange(page.pageNo + 1)">Next</a>
-        </li>
-      </ul>
-    </nav>
+    <div class="fixed-bottom bg-light justify-content-center d-flex">
+        <pagination-controls
+          (pageChange)="onPageChange($event)"
+        ></pagination-controls>
+     
+    </div>
   </div>
 </div>
 

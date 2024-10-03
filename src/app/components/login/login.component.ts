@@ -29,7 +29,6 @@ export class LoginComponent {
     if (this.form.valid) {
       this.authService.login(this.loginRequest).subscribe(
         response => {
-          console.log(response);
           if (response.statusCode == 200) {
             localStorage.setItem("access_token", response.data.accessToken);
             this.router.navigate(['/home']);
