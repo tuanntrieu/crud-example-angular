@@ -6,6 +6,7 @@ import { LoginComponent } from './components/login/login.component';
 import { FobbidenComponent } from './components/fobbiden/fobbiden.component';
 import { AuthGuard } from './auth/auth.guard';
 import { ErrorPageComponent } from './components/error-page/error-page.component';
+import { ManagerPermissionComponent } from './components/manager-permission/manager-permission.component';
 
 export const routes: Routes = [
     {
@@ -28,6 +29,10 @@ export const routes: Routes = [
     {
         path: "unauthorize",
         component: ErrorPageComponent
+    },
+    {
+        path: "manager-permission",
+        component: ManagerPermissionComponent
     },
     {
         path: "**",

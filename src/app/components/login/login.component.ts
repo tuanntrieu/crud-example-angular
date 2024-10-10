@@ -27,9 +27,11 @@ export class LoginComponent {
   onSubmit() {
     this.isFormSubmitted = true;
     if (this.form.valid) {
+      localStorage.removeItem("access_token")
       this.authService.login(this.loginRequest).subscribe(
         response => {
           if (response.statusCode == 200) {
+            localStorage.setItem
             localStorage.setItem("access_token", response.data.accessToken);
             this.router.navigate(['/home']);
           } else if (response.statusCode == 400) {

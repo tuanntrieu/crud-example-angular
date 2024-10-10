@@ -1,0 +1,33 @@
+<div class="container mt-3">
+  <div class="col-2 mt-2 btn-group me-2" *ngFor="let role of listRole">
+    <button
+      type="button"
+      class="btn btn-success dropdown-toggle"
+      data-bs-toggle="dropdown"
+      aria-expanded="false"
+      [attr.id]="role"
+      (click)="onRoleClick(role)"
+    >
+      {{ role }}
+    </button>
+    <ul class="dropdown-menu p-2" [attr.aria-labelledby]="role">
+      <div class="form-check" *ngFor="let permission of allPermissions">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          [attr.value]="permission.namePermission"
+          [checked]="isChecked(permission)"
+          [attr.id]="role + permission.namePermission"
+          (change)="onPerChange(permission)"
+        />
+        <label
+          class="form-check-label"
+          [attr.for]="role + permission.namePermission"
+          (click)="$event.stopPropagation()"
+        >
+          {{ permission.namePermission }}
+        </label>
+      </div>
+    </ul>
+  </div>
+</div>

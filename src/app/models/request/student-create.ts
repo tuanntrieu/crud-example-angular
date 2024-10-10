@@ -3,4 +3,7 @@ export class StudentCreate {
     address!: string;
     birthday!: Date;
     gender!: string;
+    username!:string;
+    password!:string;
+    rePassword!:string;
 }

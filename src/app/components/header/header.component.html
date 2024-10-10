@@ -1,16 +1,36 @@
 <div class="container bg-primary">
-  <nav class="navbar navbar-expand-sm navbar-dark justify-content-between"> <!-- Thêm justify-content-between -->
+  <nav class="navbar navbar-expand-sm navbar-dark justify-content-between">
     <ul class="navbar-nav">
       <li class="nav-item">
-        <a routerLink="/home" class="nav-link" routerLinkActive="active">Home</a>
+        <a routerLink="/home" class="nav-link" routerLinkActive="active"
+          >Home</a
+        >
       </li>
-      <li class="nav-item">
-        <a routerLink="/create-student" class="nav-link" routerLinkActive="active">Add Student</a>
+
+      <li class="nav-item" *ngIf="canCreateStudent">
+        <a
+          routerLink="/create-student"
+          class="nav-link"
+          routerLinkActive="active"
+          
+          >Add Student</a
+        >
+      </li>
+
+      <li class="nav-item" *ngIf="canManageRole">
+        <a
+          routerLink="/manager-permission"
+          class="nav-link"
+          routerLinkActive="active"
+          >Manager-Permission</a
+        >
       </li>
     </ul>
     <ul class="navbar-nav">
       <li class="nav-item">
-        <a class="nav-link" style="cursor: pointer;" (click)="onLogout()">Logout</a>
+        <a class="nav-link" style="cursor: pointer" (click)="onLogout()"
+          >Logout</a
+        >
       </li>
     </ul>
   </nav>

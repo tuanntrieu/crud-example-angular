@@ -20,7 +20,8 @@ export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
         router.navigateByUrl('/unauthorize');
         return of(err.message);
       }
-      else if(err.status === 403){
+      else if (err.status === 403) {
+        localStorage.removeItem('access_token');
         router.navigateByUrl('/access-denied');
       }
       return throwError(err);

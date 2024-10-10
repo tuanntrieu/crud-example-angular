@@ -4,4 +4,7 @@ export class Student {
     address!: string;
     birthday!: Date;
     gender!: string;
+    userName!:string;
+    role!:string;
+    permissions!:string[];
 }

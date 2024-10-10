@@ -12,6 +12,9 @@ import { StudentSearch } from '../../models/request/student-search';
 import { StudentUpdate } from '../../models/request/student-update';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ToastrService } from 'ngx-toastr';
+import { UpdateRole } from '../../models/request/update-role';
+import { AuthService } from '../../service/auth.service';
+import { PermissionConstant } from '../../models/permission-constant';
 
 
 @Component({
@@ -35,7 +38,16 @@ export class StudentListComponent {
 
   isFormSubmitted: boolean = false;
 
-  constructor(private studentServie: StudentService, private datePipe: DatePipe,private toastr: ToastrService) {
+  updateRole: UpdateRole = new UpdateRole();
+
+  listRole!: string[];
+
+  canUpdate: boolean = false;
+  canDelete: boolean = false;
+  canManage: boolean = false;
+  canDisplay: boolean = true;
+
+  constructor(private studentServie: StudentService, private datePipe: DatePipe, private toastr: ToastrService, private authService: AuthService) {
     this.updateForm = new FormGroup({
       name: new FormControl("", [Validators.required]),
       address: new FormControl("", [Validators.required]),
@@ -47,7 +59,17 @@ export class StudentListComponent {
   ngOnInit(): void {
     this.studentSearch.pageSize = 7;
     this.studentSearch.pageNo = 0;
-    this.searchStudent();
+    Promise.all([
+      this.authService.checkPermissions(PermissionConstant.UPDATE_STUDENT),
+      this.authService.checkPermissions(PermissionConstant.DELETE_STUDENT),
+      this.authService.checkPermissions(PermissionConstant.MANAGE_ROLES)
+    ]).then(([update, deletePerm, manage]) => {
+      this.canUpdate = update;
+      this.canDelete = deletePerm;
+      this.canManage = manage;
+      this.canDisplay = this.canDelete || this.canUpdate;
+      this.searchStudent();
+    });
   }
 
   searchStudent() {
@@ -70,13 +92,13 @@ export class StudentListComponent {
   }
 
   onPageChange(event: number) {
-    this.studentSearch.pageNo = event-1;
+    this.studentSearch.pageNo = event - 1;
     this.searchStudent();
   }
   onDelete() {
     this.studentServie.deleteStudent(this.studentDelete).subscribe(
-      (response) => {      
-        this.toastr.warning(response.data,"Success")
+      (response) => {
+        this.toastr.warning(response.data, "Success")
         this.searchStudent();
       }
     );
@@ -87,19 +109,41 @@ export class StudentListComponent {
     this.studentUpdate.address = student.address;
     this.studentUpdate.gender = student.gender;
     this.studentUpdate.birthdayString = this.datePipe.transform(student.birthday, 'yyyy-MM-dd') ?? '';
-    console.log(this.studentUpdate);
+    this.updateRole.role = student.role;
+    this.updateRole.studentId = student.id;
+    this.loadRole()
+    console.log(this.updateRole.role);
+
   }
   onUpdate() {
     this.isFormSubmitted = true;
     if (this.updateForm.valid) {
       this.studentServie.updateStudent(this.studentUpdate).subscribe(
         (response) => {
-        
-          this.toastr.success(response.data,"Success")
+          this.toastr.success(response.data, "Success")
           this.searchStudent();
         }
       );
+      if (this, this.canManage) {
+        this.authService.updateRole(this.updateRole).subscribe();
+      }
     }
+  }
+
+  loadRole() {
+    this.authService.findAllRole().subscribe(
+      (response) => {
+        this.listRole = response.data;
+      }
+    );
+  }
+  isSelected(role: string): boolean {
+    return role === this.updateRole.role;
+  }
+  onRoleChange(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    this.updateRole.role = selectElement.value;
+
   }
 
 
